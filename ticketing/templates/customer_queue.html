@@ -1,0 +1,271 @@
+
+
+{% extends 'layouts/base.html' %}
+
+{% block title %} Customer List {% endblock title %}
+
+{% block content %}
+<style>
+  .bg-primary {
+    background-color: #C80D0D !important;
+}
+
+</style>
+
+<link href="https://cdn.datatables.net/1.11.5/css/dataTables.bootstrap4.min.css" rel="stylesheet">
+  <link href="https://cdn.datatables.net/buttons/2.1.1/css/buttons.dataTables.min.css" rel="stylesheet">
+  <script src="https://cdn.ckeditor.com/ckeditor5/30.0.0/classic/ckeditor.js"></script>
+
+
+
+  <div class="header bg-primary pb-6">
+    <div class="container-fluid">
+      <div class="header-body">
+        <div class="row align-items-center py-4">
+          <div class="col-lg-6 col-7">
+            {% comment %} <h6 class="h2 text-white d-inline-block mb-0">Tables</h6>
+            <nav aria-label="breadcrumb" class="d-none d-md-inline-block ml-md-4">
+              <ol class="breadcrumb breadcrumb-links breadcrumb-dark">
+                <li class="breadcrumb-item"><a href="#"><i class="fas fa-home"></i></a></li>
+                <li class="breadcrumb-item"><a href="#">Tables</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Tables</li>
+              </ol> {% endcomment %}
+            </nav>
+          </div>
+          <div class="col-lg-6 col-5 text-right">
+            {% comment %} <a href="#" class="btn btn-sm btn-neutral">New</a>
+            <a href="#" class="btn btn-sm btn-neutral">Filters</a> {% endcomment %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Page content -->
+  <div class="container-fluid mt--6">
+    <div class="row">
+      <div class="col">
+        <div class="card">
+          <!-- Card header -->
+          <div class="card-header border-0">
+            <h3 class="mb-0">Customer Listing</h3>
+          </div>
+          <!-- Light table -->
+        
+              <!-- Light table -->
+          <div class="table-responsive container">
+            <table class="table align-items-center table-flush" id="ticket-table">
+              <thead class="thead-light">
+                <tr>
+                  <th scope="col" class="sort" data-sort="name">Name</th>
+                  <th scope="col" class="sort" data-sort="budget">Address</th>
+                  <th scope="col" class="sort" data-sort="status">Phone</th>
+                  <th scope="col" class="sort" data-sort="status">Email</th>
+                  <th scope="col" class="sort" data-sort="status">Service</th>
+                  <th scope="col" class="sort" data-sort="status">Active</th>
+                  <th scope="col"></th>
+                </tr>
+              </thead>
+              <tbody class="list">
+                {% for customers in customers %}
+                  <tr>
+                    <th scope="row">
+                      <div class="media align-items-center">
+                        <div class="media-body">
+                          <span class="name mb-0 text-sm">{{ customers.name }}</span>
+                        </div>
+                      </div>
+                    </th>
+                    <td class="budget">
+                      {{ customers.address}}
+                    </td>
+                   
+                    <td>
+                      {{ customers.phone }}
+                    </td>
+                    <td>
+                      {{ customers.email }}
+                    </td>
+                    <td>
+                        {{ customers.service }}
+                      </td>
+                      <td>
+                        {{ customers.active}}
+                      </td>
+                    <td class="text-right">
+                      <div class="dropdown">
+                        <a class="btn btn-sm btn-icon-only text-light" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                          <i class="fas fa-ellipsis-v"></i>
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-right dropdown-menu-arrow">
+                          <a href="#"  class="email-link dropdown-item" data-toggle="modal" data-target="#emailModal" data-customer-email="{{ customers.email }}">
+                            Send Email 
+                        </a>
+                          
+                        </div>
+                      </div>
+                    </td>
+                  </tr>
+
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+
+
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="modal fade" id="emailModal" tabindex="-1" role="dialog" aria-labelledby="emailModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+          <div class="modal-content">
+              <div class="modal-header">
+                  <h5 class="modal-title" id="emailModalLabel">Compose Email</h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                  </button>
+              </div>
+              <div class="modal-body">
+               
+                  <form id="emailForm" method="post">
+                      {% csrf_token %}
+                      <div class="form-group">
+                          <label for="toField">To:</label>
+                          <!-- Add a hidden input field to store the customer email -->
+                          <input type="hidden" id="customerEmail" value="">
+                          <!-- Add a visible input field to display the customer email (read-only) -->
+                          <input type="email" class="form-control" id="toFieldDisplay" readonly>
+                      </div>
+                      <div class="form-group">
+                          <label for="ccField">CC:</label>
+                          <input type="email" class="form-control" id="ccField" name="cc" multiple>
+                      </div>
+                      <div class="form-group">
+                          <label for="subjectField">Subject:</label>
+                          <input type="text" class="form-control" id="subjectField" name="subject" required>
+                      </div>
+                      <div class="form-group">
+                          <label for="composerField">Message:</label>
+                          <textarea class="form-control" id="composerField" name="composer" rows="5"></textarea>
+                      </div>
+                  </form>
+              </div>
+              <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                  <button type="submit" form="emailForm" class="btn btn-primary">Send Email</button>
+                  
+
+              </div>
+          </div>
+      </div>
+  </div>
+  
+  
+
+    {% include "includes/footer.html" %}
+
+  </div>
+
+{% endblock content %}
+
+<!-- Specific JS goes HERE --> 
+{% block javascripts %}
+<script>
+  $(document).ready(function () {
+      // Handle the click event for the 'Send Email' link
+      $('.email-link').click(function () {
+          // Get the customer email from the data attribute
+          var customerEmail = $(this).data('customer-email');
+          // Set the customer email value to the input field
+          $('#toField').val(customerEmail);
+          // Update the displayed value
+          $('#toFieldDisplay').val(customerEmail);
+      });
+  });
+</script>
+
+
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.11.5/js/dataTables.bootstrap4.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.1.1/js/dataTables.buttons.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.1.1/js/buttons.html5.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.1.1/js/buttons.print.min.js"></script>
+
+
+<script>
+  $(document).ready(function() {
+    $('#ticket-table').DataTable({
+      dom: 'Bfrtip',
+      buttons: [
+        {
+          extend: 'copy',
+          className: 'btn btn-secondary',
+          text: '<i class="fas fa-copy"></i> Copy',
+        },
+        {
+          extend: 'csv',
+          className: 'btn btn-secondary',
+          text: '<i class="fas fa-file-csv"></i> CSV',
+        },
+        {
+          extend: 'excel',
+          className: 'btn btn-secondary',
+          text: '<i class="fas fa-file-excel"></i> Excel',
+        },
+        {
+          extend: 'pdf',
+          className: 'btn btn-secondary',
+          text: '<i class="fas fa-file-pdf"></i> PDF',
+        },
+        {
+          extend: 'print',
+          className: 'btn btn-secondary',
+          text: '<i class="fas fa-print"></i> Print',
+        }
+      ],
+      lengthMenu: [10, 25, 50, 100],
+      pageLength: 10,
+      language: {
+        paginate: {
+          previous: '<i class="fas fa-chevron-left"></i>',
+          next: '<i class="fas fa-chevron-right"></i>',
+        }
+      },
+      columnDefs: [
+        {
+          targets: 5, 
+          
+        },
+      ],
+    });
+
+   
+
+  
+  });
+</script>
+
+
+
+
+<script>
+  // Ensure CKEditor is loaded before initializing
+  ClassicEditor
+      .create(document.querySelector('#composerField'))
+      .catch(error => {
+          console.error(error);
+      });
+</script>
+
+
+
+
+{% endblock javascripts %}
+
+
+
+

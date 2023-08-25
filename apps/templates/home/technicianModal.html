@@ -1,0 +1,360 @@
+
+<!------------------------------------------------ TECHNICIAN PENDING TICKET ----------------------------------------------- -->
+          
+            
+<div class="modal-dialog modal-lg">
+    <div class="modal-content">
+<div id="modal5" class="modal-section" style="display: none;">
+  <div class="modal-content custom-modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="myLargeModalLabel"> All {{ request.user.username }} Ticket Pending</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        
+       
+        <!-- Light table -->
+        <div class="table-responsive">
+          <table class="table align-items-center table-dark table-flush">
+            <thead class="thead-light">
+              <tr>
+                <th scope="col" class="sort" data-sort="name">Customer</th>
+                <th scope="col" class="sort" data-sort="budget">Title</th>
+                <th scope="col" class="sort" data-sort="status">Status</th>
+                <th scope="col" class="sort" data-sort="status">Created By</th>
+                <th scope="col" class="sort" data-sort="status">Created On</th>
+                
+                <th scope="col"></th>
+              </tr>
+            </thead>
+            <tbody class="list">
+              {% for tickets in ticketPendingtech %}
+              <tr>
+                <th scope="row">
+                  <div class="media align-items-center">
+                  
+                    <div class="media-body">
+                      <span class="name mb-0 text-sm">{{tickets.customer}}</span>
+                    </div>
+                  </div>
+                </th>
+                <td class="budget">
+                  {{tickets.title}}
+                </td>
+                <td>
+                  {% if tickets.status == "In_Progress" %}
+                  <span class="badge badge-dot mr-4">
+                    <i class="bg-info"></i>
+                    <span class="status">In Progress</span>
+                  </span>
+                  {% elif tickets.status == "Pending" %}
+                  <span class="badge badge-dot mr-4">
+                      <i class="bg-warning"></i>
+                      <span class="status">Pending</span>
+                    </span>
+                    {% elif tickets.status == "TechComplete" %}
+                    <span class="badge badge-dot mr-4">
+                      <i class="bg-success"></i>
+                      <span class="status">Tech Completed</span>
+                    </span>
+                    {% elif tickets.status == "Postpone" %}
+                    <span class="badge badge-dot mr-4">
+                      <i class="bg-info"></i>
+                      <span class="status">Postpone</span>
+                    </span>
+                    {% elif tickets.status == "Completed" %}
+                    <span class="badge badge-dot mr-4">
+                      <i class="bg-danger"></i>
+                      <span class="status">Completed</span>
+                    </span>
+                    {% elif tickets.status == "Cancel" %}
+                    <span class="badge badge-dot mr-4">
+                      <i class="bg-info"></i>
+                      <span class="status">Cancel</span>
+                    </span>
+                    {% elif tickets.status == "CustomerApproved" %}
+                    <span class="badge badge-dot mr-4">
+                      <i class="bg-info"></i>
+                      <span class="status">Customer Approver</span>
+                    </span>
+                  </td>
+                  {% endif %}
+                <td class="budget">
+                  {{tickets.created_by}}
+                  
+                </td>
+                <td>
+                  <div class="d-flex align-items-center">
+                    <span class="completion mr-2">{{tickets.date_created}}</span>
+                    
+                  </div>
+                </td>
+                <td class="text-right">
+                  <div class="dropdown">
+                    <a class="btn btn-sm btn-icon-only text-light" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                      <i class="fas fa-ellipsis-v"></i>
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-right dropdown-menu-arrow">
+                      <a class="dropdown-item" href="{% url 'ticket_details' tickets.pk %}">Ticket Details</a>
+                      <a class="dropdown-item" href="{% url 'accept_ticket' tickets.pk %}">Accept</a>
+                      
+                    </div>
+                  </div>
+                </td>
+              </tr>
+              
+              {% endfor %}
+
+            </tbody>
+          </table>
+        </div>
+
+
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+
+
+<!------------------------------------------------ TECHNICIAN TICKET IN PROGRESS ----------------------------------------------- -->
+          
+            
+<div class="modal-dialog modal-lg">
+    <div class="modal-content">
+<div id="modal6" class="modal-section" style="display: none;">
+  <div class="modal-content custom-modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="myLargeModalLabel"> All {{ request.user.username }} Ticket In Progress</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        
+       
+        <!-- Light table -->
+        <div class="table-responsive">
+          <table class="table align-items-center table-dark table-flush">
+            <thead class="thead-light">
+              <tr>
+                <th scope="col" class="sort" data-sort="name">Customer</th>
+                <th scope="col" class="sort" data-sort="budget">Title</th>
+                <th scope="col" class="sort" data-sort="status">Status</th>
+                <th scope="col" class="sort" data-sort="status">Created By</th>
+                <th scope="col" class="sort" data-sort="status">Created On</th>
+                
+                <th scope="col"></th>
+              </tr>
+            </thead>
+            <tbody class="list">
+              {% for tickets in ticketInprogresstech %}
+              <tr>
+                <th scope="row">
+                  <div class="media align-items-center">
+                  
+                    <div class="media-body">
+                      <span class="name mb-0 text-sm">{{tickets.customer}}</span>
+                    </div>
+                  </div>
+                </th>
+                <td class="budget">
+                  {{tickets.title}}
+                </td>
+                <td>
+                  {% if tickets.status == "In_Progress" %}
+                  <span class="badge badge-dot mr-4">
+                    <i class="bg-info"></i>
+                    <span class="status">In Progress</span>
+                  </span>
+                  {% elif tickets.status == "Pending" %}
+                  <span class="badge badge-dot mr-4">
+                      <i class="bg-warning"></i>
+                      <span class="status">Pending</span>
+                    </span>
+                    {% elif tickets.status == "TechComplete" %}
+                    <span class="badge badge-dot mr-4">
+                      <i class="bg-success"></i>
+                      <span class="status">Tech Completed</span>
+                    </span>
+                    {% elif tickets.status == "Postpone" %}
+                    <span class="badge badge-dot mr-4">
+                      <i class="bg-info"></i>
+                      <span class="status">Postpone</span>
+                    </span>
+                    {% elif tickets.status == "Completed" %}
+                    <span class="badge badge-dot mr-4">
+                      <i class="bg-danger"></i>
+                      <span class="status">Completed</span>
+                    </span>
+                    {% elif tickets.status == "Cancel" %}
+                    <span class="badge badge-dot mr-4">
+                      <i class="bg-info"></i>
+                      <span class="status">Cancel</span>
+                    </span>
+                    {% elif tickets.status == "CustomerApproved" %}
+                    <span class="badge badge-dot mr-4">
+                      <i class="bg-info"></i>
+                      <span class="status">Customer Approver</span>
+                    </span>
+                  </td>
+                  {% endif %}
+                <td class="budget">
+                  {{tickets.created_by}}
+                  
+                </td>
+                <td>
+                  <div class="d-flex align-items-center">
+                    <span class="completion mr-2">{{tickets.date_created}}</span>
+                    
+                  </div>
+                </td>
+                <td class="text-right">
+                  <div class="dropdown">
+                    <a class="btn btn-sm btn-icon-only text-light" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                      <i class="fas fa-ellipsis-v"></i>
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-right dropdown-menu-arrow">
+                      <a class="dropdown-item" href="{% url 'ticket_details' tickets.pk %}">Ticket Details</a>
+                      <a class="dropdown-item" href="{% url 'accept_ticket' tickets.pk %}">Accept</a>
+                      
+                    </div>
+                  </div>
+                </td>
+              </tr>
+              
+              {% endfor %}
+
+            </tbody>
+          </table>
+        </div>
+
+
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+
+<!------------------------------------------------ TECHNICIAN TICKET UNASSIGNED ----------------------------------------------- -->
+          
+            
+<div class="modal-dialog modal-lg">
+    <div class="modal-content">
+<div id="modal8" class="modal-section" style="display: none;">
+  <div class="modal-content custom-modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="myLargeModalLabel"> All {{ request.user.username }} Ticket Unassigned</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        
+       
+        <!-- Light table -->
+        <div class="table-responsive">
+          <table class="table align-items-center table-dark table-flush">
+            <thead class="thead-light">
+              <tr>
+                <th scope="col" class="sort" data-sort="name">Customer</th>
+                <th scope="col" class="sort" data-sort="budget">Title</th>
+                <th scope="col" class="sort" data-sort="status">Status</th>
+                <th scope="col" class="sort" data-sort="status">Created By</th>
+                <th scope="col" class="sort" data-sort="status">Created On</th>
+                
+                <th scope="col"></th>
+              </tr>
+            </thead>
+            <tbody class="list">
+              {% for tickets in  ticketUnassigned %}
+              <tr>
+                <th scope="row">
+                  <div class="media align-items-center">
+                  
+                    <div class="media-body">
+                      <span class="name mb-0 text-sm">{{tickets.customer}}</span>
+                    </div>
+                  </div>
+                </th>
+                <td class="budget">
+                  {{tickets.title}}
+                </td>
+                <td>
+                  {% if tickets.status == "In_Progress" %}
+                  <span class="badge badge-dot mr-4">
+                    <i class="bg-info"></i>
+                    <span class="status">In Progress</span>
+                  </span>
+                  {% elif tickets.status == "Pending" %}
+                  <span class="badge badge-dot mr-4">
+                      <i class="bg-warning"></i>
+                      <span class="status">Pending</span>
+                    </span>
+                    {% elif tickets.status == "TechComplete" %}
+                    <span class="badge badge-dot mr-4">
+                      <i class="bg-success"></i>
+                      <span class="status">Tech Completed</span>
+                    </span>
+                    {% elif tickets.status == "Postpone" %}
+                    <span class="badge badge-dot mr-4">
+                      <i class="bg-info"></i>
+                      <span class="status">Postpone</span>
+                    </span>
+                    {% elif tickets.status == "Completed" %}
+                    <span class="badge badge-dot mr-4">
+                      <i class="bg-danger"></i>
+                      <span class="status">Completed</span>
+                    </span>
+                    {% elif tickets.status == "Cancel" %}
+                    <span class="badge badge-dot mr-4">
+                      <i class="bg-info"></i>
+                      <span class="status">Cancel</span>
+                    </span>
+                    {% elif tickets.status == "CustomerApproved" %}
+                    <span class="badge badge-dot mr-4">
+                      <i class="bg-info"></i>
+                      <span class="status">Customer Approver</span>
+                    </span>
+                  </td>
+                  {% endif %}
+                <td class="budget">
+                  {{tickets.created_by}}
+                  
+                </td>
+                <td>
+                  <div class="d-flex align-items-center">
+                    <span class="completion mr-2">{{tickets.date_created}}</span>
+                    
+                  </div>
+                </td>
+                <td class="text-right">
+                  <div class="dropdown">
+                    <a class="btn btn-sm btn-icon-only text-light" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                      <i class="fas fa-ellipsis-v"></i>
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-right dropdown-menu-arrow">
+                      <a class="dropdown-item" href="{% url 'ticket_details' tickets.pk %}">Ticket Details</a>
+                      <a class="dropdown-item" href="{% url 'accept_ticket' tickets.pk %}">Accept</a>
+                      
+                    </div>
+                  </div>
+                </td>
+              </tr>
+              
+              {% endfor %}
+
+            </tbody>
+          </table>
+        </div>
+
+
+      </div>
+    </div>
+  </div>
+</div>
+</div>

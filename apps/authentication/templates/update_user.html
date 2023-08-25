@@ -1,0 +1,294 @@
+{% extends 'layouts/base-fullscreen.html' %}
+
+{% block title %} Register {% endblock title %}
+
+<!-- Specific CSS goes HERE -->
+{% block stylesheets %}{% endblock stylesheets %}
+
+{% block content %}
+
+<style>
+  .mani-controler{
+    margin-top: -80px
+  }
+
+  .justify-content-center {
+    justify-content: center !important;
+    margin-top: -90px;
+}
+
+.add-crendnt, .singup, .signin-sty {
+  color: #C80D0D;
+}
+
+.singinbtn{
+  background-color: #C80D0D;
+}
+</style>
+
+<div class="form-group">
+  {% for message in messages %}
+  <div class="alert alert-danger" role="alert">
+  {{message}}
+  </div>
+  {% endfor %}
+  </div>
+
+    <!-- Page content -->
+    <div class="container mt--8 pb-5">
+      <!-- Table -->
+      <div class="row justify-content-center">
+        <div class="col-lg-6 col-md-8">
+        
+          <div class="card bg-secondary shadow border-0">
+            <div class="card-header bg-transparent pb-5">
+              <div class="singup text-center mt-2 mb-4">
+                
+              </div>
+            </div>
+            <div class="card-body px-lg-5 py-lg-5">
+              <div class="text-center add-crendnt mb-4">
+
+                {% if msg %}
+                  <small>{{ msg | safe }}</small>
+                {% else %}
+                  Update User
+                {% endif %}  
+              
+              </div>
+
+              {% if not success %}
+
+              <form method="POST">
+                {% csrf_token %}
+
+                <div class="row">
+                  <div class="col">
+                    <div class="form-group">
+                      <div class="input-group input-group-alternative mb-3">
+                        <div class="input-group-prepend">
+                          <span class="input-group-text"><i class="ni ni-single-02"></i>
+                          </span>
+                        </div>
+                        {{ form.first_name }}
+                      </div>
+                    </div>
+                    <span class="text-error">{{ form.first_name.errors }}</span>
+
+                  </div>
+                  <div class="col">
+                    <div class="form-group">
+                      <div class="input-group input-group-alternative mb-3">
+                        <div class="input-group-prepend">
+                          <span class="input-group-text"><i class="ni ni-single-02"></i>
+                          </span>
+                        </div>
+                        {{ form.last_name }}
+                      </div>
+                    </div>
+                    <span class="text-error">{{ form.last_name.errors }}</span>
+                    
+                  </div>
+
+
+                </div>
+
+                <div class="row">
+                  <div class="col">
+                    <div class="form-group">
+                      <div class="input-group input-group-alternative mb-3">
+                        <div class="input-group-prepend">
+                          <span class="input-group-text"><i class="ni ni-square-pin"></i>
+
+                          </span>
+                        </div>
+                        {{ form.address }}
+                      </div>
+                    </div>
+                    <span class="text-error">{{ form.address.errors }}</span>
+
+                  </div>
+                  <div class="col">
+                    <div class="form-group">
+                      <div class="input-group input-group-alternative mb-3">
+                        <div class="input-group-prepend">
+                          <span class="input-group-text"><i class="ni ni-mobile-button"></i>
+                          </span>
+                        </div>
+                        {{ form.phone_number }}
+                      </div>
+                    </div>
+                    <span class="text-error">{{ form.phone_number.errors }}</span>
+                    
+                  </div>
+
+
+                </div>
+              
+                <div class="form-group">
+                  <div class="input-group input-group-alternative mb-3">
+                    <div class="input-group-prepend">
+                      <span class="input-group-text"><i class="ni ni-hat-3"></i></span>
+                    </div>
+                    {{ form.username }}
+                  </div>
+                </div>
+                <span class="text-error">{{ form.username.errors }}</span>
+              
+                <div class="form-group">
+                  <div class="input-group input-group-alternative mb-3">
+                    <div class="input-group-prepend">
+                      <span class="input-group-text"><i class="ni ni-email-83"></i></span>
+                    </div>
+                    {{ form.email }}
+                  </div>
+                </div>
+                <span class="text-error">{{ form.email.errors }}</span>
+              
+                <div class="form-group">
+                  <div class="input-group input-group-alternative">
+                    <div class="input-group-prepend">
+                      <span class="input-group-text"><i class="ni ni-lock-circle-open"></i></span>
+                    </div>
+                    {{ form.password1 }}
+                  </div>
+                </div>
+                <span class="text-error">{{ form.password1.errors }}</span>
+              
+                <div class="form-group">
+                  <div class="input-group input-group-alternative">
+                    <div class="input-group-prepend">
+                      <span class="input-group-text"><i class="ni ni-lock-circle-open"></i></span>
+                    </div>
+                    {{ form.password2 }}
+                  </div>
+                </div>
+                <span class="text-error">{{ form.password2.errors }}</span>
+              
+                
+  <div class="form-group">
+    <div class="custom-control custom-switch">
+      <input class="custom-control-input" id="is_admin_toggle" type="checkbox" name="is_admin">
+      <label class="custom-control-label" for="is_admin_toggle">Is Admin</label>
+      <span class="custom-toggle-slider rounded-circle"></span>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <div class="custom-control custom-switch">
+      <input class="custom-control-input" id="is_technician_toggle" type="checkbox" name="is_technician">
+      <label class="custom-control-label" for="is_technician_toggle">Is Technician</label>
+      <span class="custom-toggle-slider rounded-circle"></span>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <div class="custom-control custom-switch">
+      <input class="custom-control-input" id="is_customer_care_toggle" type="checkbox" name="is_customer_care">
+      <label class="custom-control-label" for="is_customer_care_toggle">Is Customer Care</label>
+      <span class="custom-toggle-slider rounded-circle"></span>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <div class="custom-control custom-switch">
+      <input class="custom-control-input" id="is_employee_toggle" type="checkbox" name="is_employe">
+      <label class="custom-control-label" for="is_employee_toggle">Is Officer</label>
+      <span class="custom-toggle-slider rounded-circle"></span>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <div class="custom-control custom-switch">
+      <input class="custom-control-input" id="is_supervisor_toggle" type="checkbox" name="is_supervisor">
+      <label class="custom-control-label" for="is_supervisor_toggle">Is Supervisor</label>
+      <span class="custom-toggle-slider rounded-circle"></span>
+    </div>
+  </div>
+              
+                <div class="row my-4">
+                  <div class="col-12">
+                    <div class="custom-control custom-control-alternative custom-checkbox">
+                      {% comment %} <input class="custom-control-input" id="customCheckRegister" type="checkbox">
+                      <label class="custom-control-label" for="customCheckRegister"> {% endcomment %}
+                        {% comment %} <span class="text-muted">I agree with the <a href="#!">Privacy Policy</a></span> {% endcomment %}
+                      </label>
+                    </div>
+                  </div>
+                </div>
+                <div class="text-center">
+                  
+                  <button type="button" class="btn btn-danger singinbtn" data-toggle="modal" data-target="#exampleModal">
+                    Update Account
+                  </button>
+                </div>
+
+                <!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">User Account Update Confirmation</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        Are You Sure You Want To Update this user account?
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="submit" class="btn btn-danger singinbtn">Update account</button>
+      </div>
+    </div>
+  </div>
+</div>
+              </form>
+              
+
+              {% endif %}  
+
+              <!-- Button trigger modal -->
+
+
+
+  
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <div class="row mt-3">
+        <div class="col-3"></div>
+        <div class="col-3">
+          <a href="{% url 'login' %}" class="text-light"><small>Login</small></a>
+        </div>
+        
+      </div>
+
+    </div>
+  </div>
+
+{% endblock content %}
+
+<!-- Specific JS goes HERE --> 
+{% block javascripts %}
+
+<script>
+  const roleCheckboxes = document.querySelectorAll('.custom-control-input[name^="is_"]');
+
+  roleCheckboxes.forEach(checkbox => {
+    checkbox.addEventListener('change', () => {
+      if (checkbox.checked) {
+        roleCheckboxes.forEach(otherCheckbox => {
+          if (otherCheckbox !== checkbox) {
+            otherCheckbox.checked = false;
+          }
+        });
+      }
+    });
+  });
+</script>
+
+{% endblock javascripts %}

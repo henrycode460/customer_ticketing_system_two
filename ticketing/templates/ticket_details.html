@@ -1,0 +1,320 @@
+{% extends 'layouts/base.html' %}
+
+{% block title %} Tables {% endblock title %}
+
+{% block content %}
+<link href="https://cdnjs.cloudflare.com/ajax/libs/ckeditor/4.22.1/ckeditor.js" >
+
+
+
+<style>
+  .message-container {
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+  }
+  
+  .user-message, .other-user-message {
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+  }
+  
+  .user-message {
+    background-color: #eaf7ff;
+  }
+  
+  .other-user-message {
+    background-color: #f3f3f3;
+  }
+  
+  .date {
+    font-size: 12px;
+    color: #888;
+  }
+  
+  .sender {
+    font-weight: bold;
+    margin-bottom: 5px;
+  }
+  
+  .message-container {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .user-message, .other-user-message {
+    max-width: 70%;
+    margin-bottom: 10px;
+    border-radius: 0.5em;
+    padding-right: 70px;
+  }
+
+  .user-message {
+    background-color: #DCF8C6;
+    color: #333;
+    border-radius: 20px;
+    padding: 10px;
+    margin-bottom: 10px;
+    align-self: flex-end;
+  }
+
+  .other-user-message {
+    background-color: #EDEFF1;
+    color: #333;
+    border-radius: 20px;
+    padding: 10px;
+    margin-bottom: 10px;
+    align-self: flex-start;
+  }
+
+ 
+    .bg-primary {
+      background-color: #C80D0D !important;
+  }
+
+ 
+
+  .ticket-info {
+    display: block;
+   
+  }
+
+  .ticket-info-item {
+    margin-right: 0;
+    margin-bottom: 10px;
+    
+  }
+
+  @media (max-width: 767px) {
+
+    .ticket-info {
+      display: flex;
+      flex-wrap: wrap;
+      margin-bottom: 10px;
+
+    }
+    .ticket-info-item {
+      flex: 1;
+      margin-right: 10px;
+    }
+   
+  }
+
+</style>
+
+ 
+
+{% load myticket_extra %}
+{% load my_filters %}
+{% load custom_filters %}
+
+
+<div class="header bg-primary pb-6">
+  <div class="container-fluid">
+    <div class="header-body">
+      <div class="row align-items-center py-4">
+        <div class="col-lg-12 col-5 text-right"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Page content -->
+<div class="container-fluid mt--6">
+  <div class="row">
+    <div class="col">
+      <div class="card">
+        <!-- Card header -->
+        <div class="card-header border-0">
+          <h3 class="mb-0 text-warning">Ticket #{{ ticket.ticket_number }} Details</h3>
+        </div>
+
+        <div class="container">
+          <div class="row">
+            <div class="col-md-4 order-md-1 order-2">
+              <div class="container card border-success mb-3" style="max-width: 18rem;">
+                <h3 class="text-warning">TICKET INFORMATION</h3>
+                <div class="card-body text-success ticket-info">
+                  <div class="ticket-info-item">
+                    <p class="text-warning">Ticket ID:</p>
+                    <p class="text-warning">{{ ticket.ticket_number }}</p>
+                  </div>
+                  <div class="ticket-info-item">
+                    <p class="text-warning">Title:</p>
+                    <p class="text-warning">{{ ticket.title }}</p>
+                  </div>
+                  <div class="ticket-info-item">
+                    <p class="text-warning">Description:</p>
+                    <p class="text-warning">{{ ticket.description|safe }}</p>
+                  </div>
+                  <div class="ticket-info-item">
+                    <p class="text-warning">Date Created:</p>
+                    <p class="text-warning">{{ ticket.date_created }}</p>
+                  </div>
+                  <div class="ticket-info-item">
+                    <p class="text-warning">Date Accepted:</p>
+                    <p class="text-warning">{{ ticket.accepted_date }}</p>
+                  </div>
+                  <td>
+                    {% if ticket.status == "In_Progress" %}
+                      <span class="badge badge-dot mr-4">
+                        <i class="bg-info"></i>
+                        <span class="status">In Progress</span>
+                      </span>
+                    {% elif ticket.status == "Pending" %}
+                      <span class="badge badge-dot mr-4">
+                        <i class="bg-warning"></i>
+                        <span class="status">Pending</span>
+                      </span>
+                    {% elif ticket.status == "TechComplete" %}
+                      <span class="badge badge-dot mr-4">
+                        <i class="bg-success"></i>
+                        <span class="status">Tech Completed</span>
+                      </span>
+                    {% elif ticket.status == "Postpone" %}
+                      <span class="badge badge-dot mr-4">
+                        <i class="bg-info"></i>
+                        <span class="status">Postpone</span>
+                      </span>
+                    {% elif ticket.status == "Completed" %}
+                      <span class="badge badge-dot mr-4">
+                        <i class="bg-danger"></i>
+                        <span class="status">Completed</span>
+                      </span>
+                    {% elif ticket.status == "Cancel" %}
+                      <span class="badge badge-dot mr-4">
+                        <i class="bg-info"></i>
+                        <span class="status">Cancel</span>
+                      </span>
+                    {% elif ticket.status == "CustomerApproved" %}
+                      <span class="badge badge-dot mr-4">
+                        <i class="bg-info"></i>
+                        <span class="status">Customer Approver</span>
+                      </span>
+                    {% endif %}
+                  </td>
+                </div>
+                <div class="card-footer bg-transparent border-success">
+                  <div><p class="text-uppercase text-warning"> Main Users</p></div>
+                  <div style="display:flex; flex-direction:column;">
+                    <div style="margin-bottom:5px"> <i class="fas fa-user text-success"><span class="text-warning" style="padding:15px;">{{ ticket.assignee.full_name }}</span></i></div>
+                    <div> <i class="fas fa-user text-success"><span style="padding:15px;" class="text-warning">{{ ticket.created_by.full_name }}</span></i></div>
+                  </div>
+                </div>
+                <div class="card-footer bg-transparent border-success">
+                  <p class="text-uppercase text-warning">Collaborators</p>
+                </div>
+              </div>
+            </div>
+
+
+            <div class="col-md-8 order-md-2 order-1">
+              <div style="overflow-y: scroll; height: 300px;">
+                  <div class="message-container">
+                      {% for message in messages %}
+                          {% if message.sender == request.user.username %}
+                              <div class="user-message">
+                                  <p class="date">{{ message.timestamp|date:"M d, Y g:iA" }}</p>
+                                  <p class="message">{{ message.message|safe }}</p>
+                                  {% if message.attachment_url %}
+                                      <p class="attachment">
+                                          
+                                          <a href="{{ MEDIA_URL }}{{ message.attachment_url }}" download>
+                                              {{ message.attachment_url|extract_filename }}
+                                          </a>
+                                      </p>
+                                  {% endif %}
+                              </div>
+                          {% else %}
+                              <div class="other-user-message">
+                                  <p class="date">{{ message.timestamp|date:"M d, Y g:iA" }}</p>
+                                  <p class="sender">{{ message.sender|safe }}:</p>
+                                  <p class="message">{{ message.message|safe }}</p>
+                                  {% if message.attachment_url %}
+                                      <p class="attachment">
+                                          
+                                          <a href="{{ MEDIA_URL }}{{ message.attachment_url }}" download>
+                                              {{ message.attachment_url|extract_filename }}
+                                          </a>
+                                      </p>
+                                  {% endif %}
+                              </div>
+                          {% endif %}
+                      {% endfor %}
+                  </div>
+              </div>
+         
+          
+          
+          
+          {% comment %} <form method="POST" enctype="multipart/form-data">
+              {% csrf_token %}
+              {{ form.as_p }}
+              <input type="file" name="attachment">
+              <button type="submit">Send</button>
+          </form>
+           {% endcomment %}
+              {% if ticket.status == "Pending" or "In_Progress" %}
+              <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                {{ form.media }} 
+                {{ form.text | safe }}
+                {{ form.as_p }}
+                <input type="file" name="attachment" class="btn btn-primary">
+                {% endif %}
+                <div class="dropdown">
+                  <button class="btn btn-warning dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Reply
+                  </button>
+                  <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                    {% comment %} <button type="submit" id="btn">Send Message</button> {% endcomment %}
+                    <input  type="submit" value="Submit" class=" dropdown-item btn btn-light"></li>
+                    {% if request.user.is_technician and not ticket.is_resolve %}
+                    <button type="button" class="btn btn-primary dropdown-item " data-toggle="modal" data-target="#exampleModal">
+                      Confirm Resolution
+                    </button>
+                    {% comment %} <a class="dropdown-item" href="{% url 'cancel_ticket' ticket.pk%}">Cancel[ Ticket</a> {% endcomment %}
+                    {% endif %}
+                    
+                  </div>
+                </div>
+              </form>
+            </div>
+
+            <!-- Button trigger modal -->
+
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Confirm Ticket Resolution</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        Are You show you want to close this Ticket? 
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <a type="button" href="{% url 'close_ticket' ticket.pk %}" class="btn btn-primary">Save changes</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+          </div>
+          <!-- Card footer -->
+          <div class="card-footer py-4"></div>
+        </div>
+      </div>
+    </div>
+    {% include "includes/footer.html" %}
+  </div>
+{% endblock content %}
+
+<!-- Specific JS goes HERE --> 
+{% block javascripts %}{% endblock javascripts %}

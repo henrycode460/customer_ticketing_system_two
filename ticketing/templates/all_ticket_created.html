@@ -1,0 +1,255 @@
+{% extends 'layouts/base.html' %}
+
+{% block title %} Ticket List {% endblock title %}
+
+{% block content %}
+
+<style>
+  .bg-primary {
+    background-color: #C80D0D !important;
+}
+
+
+
+</style>
+
+<link href="https://cdn.datatables.net/1.11.5/css/dataTables.bootstrap4.min.css" rel="stylesheet">
+  <link href="https://cdn.datatables.net/buttons/2.1.1/css/buttons.dataTables.min.css" rel="stylesheet">
+
+
+
+  <div class="header bg-primary pb-6">
+    <div class="container-fluid">
+      <div class="header-body">
+        <div class="row align-items-center py-4">
+          <div class="col-lg-6 col-7">
+            {% comment %} <h6 class="h2 text-white d-inline-block mb-0">Tables</h6>
+            <nav aria-label="breadcrumb" class="d-none d-md-inline-block ml-md-4">
+              <ol class="breadcrumb breadcrumb-links breadcrumb-dark">
+                <li class="breadcrumb-item"><a href="#"><i class="fas fa-home"></i></a></li>
+                <li class="breadcrumb-item"><a href="#">Tables</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Tables</li>
+              </ol> {% endcomment %}
+            </nav>
+          </div>
+          <div class="col-lg-6 col-5 text-right">
+            {% comment %} <a href="#" class="btn btn-sm btn-neutral">New</a>
+            <a href="#" class="btn btn-sm btn-neutral">Filters</a> {% endcomment %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Page content -->
+  <div class="container-fluid mt--6">
+    <div class="row">
+      <div class="col">
+        <div class="card">
+          <!-- Card header -->
+          <div class="card-header border-0">
+            <h3 class="mb-0">ALL Ticket Created By {{ request.user.username }}</h3>
+          </div>
+          <!-- Light table -->
+        
+              <!-- Light table -->
+          <div class="table-responsive container">
+            <table class="table align-items-center table-flush" id="ticket-table">
+              <thead class="thead-light">
+                <tr>
+                  <th scope="col" class="sort" data-sort="name">Customer</th>
+                  <th scope="col" class="sort" data-sort="budget">Title</th>
+                  <th scope="col" class="sort" data-sort="status">Status</th>
+                  <th scope="col" class="sort" data-sort="status">Assigned to</th>
+                  <th scope="col" class="sort" data-sort="status">Created On</th>
+                  <th scope="col"></th>
+                </tr>
+              </thead>
+              <tbody class="list">
+                {% for ticket in ticket %}
+                  <tr>
+                    <th scope="row">
+                      <div class="media align-items-center">
+                        <div class="media-body">
+                          <span class="name mb-0 text-sm">{{ ticket.customer }}</span>
+                        </div>
+                      </div>
+                    </th>
+                    <td class="budget">
+                      {{ ticket.title }}
+                    </td>
+                    <td>
+                      {% if ticket.status == "In_Progress" %}
+                        <span class="badge badge-dot mr-4">
+                          <i class="bg-info"></i>
+                          <span class="status">In Progress</span>
+                        </span>
+                      {% elif ticket.status == "Pending" %}
+                        <span class="badge badge-dot mr-4">
+                          <i class="bg-warning"></i>
+                          <span class="status">Pending</span>
+                        </span>
+                      {% elif ticket.status == "Completed" %}
+                        <span class="badge badge-dot mr-4">
+                          <i class="bg-success"></i>
+                          <span class="status">Completed</span>
+                        </span>
+                        {% elif ticket.status == "TechComplete" %}
+                        <span class="badge badge-dot mr-4">
+                          <i class="bg-default"></i>
+                          <span class="status">Technician Completed</span>
+                        </span>
+                        {% elif ticket.status == "CustomerDisproved" %}
+                        <span class="badge badge-dot mr-4">
+                          <i class="bg-danger"></i>
+                          <span class="status">Customer Disproved</span>
+                        </span>
+                        {% elif ticket.status == "Postpone" %}
+                        <span class="badge badge-dot mr-4">
+                          <i class="bg-default"></i>
+                          <span class="status">Postpone</span>
+                        </span>
+                        {% elif ticket.status == "CustomerApproved" %}
+                        <span class="badge badge-dot mr-4">
+                          <i class="bg-warning"></i>
+                          <span class="status">Await Customer App.</span>
+                        </span>
+                      {% endif %}
+                    </td>
+                    <td>
+                      {{ ticket.assignee.full_name }}
+                    </td>
+                    <td>
+                      {{ ticket.date_created }}
+                    </td>
+                    <td class="text-right">
+                      <div class="dropdown">
+                        <a class="btn btn-sm btn-icon-only text-light" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                          <i class="fas fa-ellipsis-v"></i>
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-right dropdown-menu-arrow">
+                          <a class="dropdown-item" href="{% url 'ticket_details' ticket.pk %}">Ticket Details</a>
+                          <a  class="dropdown-item" href="{% url 'update_ticket' ticket.pk%}">Update Ticket</a>
+                          
+                        </div>
+                      </div>
+                    </td>
+                  </tr>
+
+                  <!-- Update Ticket Modal -->
+                  <div class="modal fade" id="updateTicketModal{{ ticket.id }}" tabindex="-1" role="dialog" aria-labelledby="updateTicketModal{{ ticket.id }}Label" aria-hidden="true">
+                    <div class="modal-dialog modal-lg" role="document">
+                      <div class="modal-content">
+                        <div class="modal-header">
+                          <h5 class="modal-title" id="updateTicketModal{{ ticket.id }}Label">Update Ticket</h5>
+                          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                          </button>
+                        </div>
+                        <div class="modal-body">
+                          <form method="POST" action="">
+                            {% csrf_token %}
+                            <div class="form-group">
+                              <label for="id_title">Title</label>
+                              <input type="text" class="form-control" id="id_title" name="title" value="{{ update_form.title.value }}">
+                            </div>
+                            <div class="form-group">
+                              <label for="id_description">Description</label>
+                              <textarea class="form-control" id="id_description" name="description">{{ update_form.description.value|safe }}</textarea>
+                            </div>
+                            <div class="form-group">
+                              <label for="id_assignee">Assignee</label>
+                              <input type="text" class="form-control" id="id_assignee" name="assignee" value="{{ update_form.assignee.value }}">
+                            </div>
+                            <input type="hidden" name="ticket_id" value="{{ ticket.id }}">
+                            <button type="submit" name="updateForm" class="btn btn-primary">Update Ticket</button>
+                          </form>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+    {% include "includes/footer.html" %}
+
+  </div>
+
+{% endblock content %}
+
+<!-- Specific JS goes HERE --> 
+{% block javascripts %}
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.11.5/js/dataTables.bootstrap4.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.1.1/js/dataTables.buttons.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.1.1/js/buttons.html5.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.1.1/js/buttons.print.min.js"></script>
+
+
+<script>
+  $(document).ready(function() {
+    $('#ticket-table').DataTable({
+      dom: 'Bfrtip',
+      buttons: [
+        {
+          extend: 'copy',
+          className: 'btn btn-secondary',
+          text: '<i class="fas fa-copy"></i> Copy',
+        },
+        {
+          extend: 'csv',
+          className: 'btn btn-secondary',
+          text: '<i class="fas fa-file-csv"></i> CSV',
+        },
+        {
+          extend: 'excel',
+          className: 'btn btn-secondary',
+          text: '<i class="fas fa-file-excel"></i> Excel',
+        },
+        {
+          extend: 'pdf',
+          className: 'btn btn-secondary',
+          text: '<i class="fas fa-file-pdf"></i> PDF',
+        },
+        {
+          extend: 'print',
+          className: 'btn btn-secondary',
+          text: '<i class="fas fa-print"></i> Print',
+        }
+      ],
+      lengthMenu: [10, 25, 50, 100],
+      pageLength: 10,
+      language: {
+        paginate: {
+          previous: '<i class="fas fa-chevron-left"></i>',
+          next: '<i class="fas fa-chevron-right"></i>',
+        }
+      },
+      columnDefs: [
+        {
+          targets: 5, 
+          
+        },
+      ],
+    });
+  });
+</script>
+
+
+
+
+
+{% endblock javascripts %}
+
+
+

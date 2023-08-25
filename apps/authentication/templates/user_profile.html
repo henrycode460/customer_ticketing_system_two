@@ -1,0 +1,191 @@
+{% extends 'layouts/base-fullscreen.html' %}
+
+{% block title %} Register {% endblock title %}
+
+<!-- Specific CSS goes HERE -->
+{% block stylesheets %}{% endblock stylesheets %}
+
+{% block content %}
+
+<style>
+  .mani-controler{
+    margin-top: -80px
+  }
+
+  .justify-content-center {
+    justify-content: center !important;
+    margin-top: -90px;
+}
+
+.add-crendnt, .singup, .signin-sty {
+  color: #C80D0D;
+}
+
+.singinbtn{
+  background-color: #C80D0D;
+}
+</style>
+
+<div class="form-group">
+  {% for message in messages %}
+  <div class="alert alert-danger" role="alert">
+  {{message}}
+  </div>
+  {% endfor %}
+  </div>
+
+    <!-- Page content -->
+    <div class="container mt--8 pb-5">
+      <!-- Table -->
+      <div class="row justify-content-center">
+        <div class="col-lg-6 col-md-8">
+        
+          <div class="card bg-secondary shadow border-0">
+            <div class="card-header bg-transparent pb-5">
+              <div class="singup text-center mt-2 mb-4">
+                
+              </div>
+            </div>
+            <div class="card-body px-lg-5 py-lg-5">
+              <div class="text-center add-crendnt mb-4">
+
+                {% if msg %}
+                  <small>{{ msg | safe }}</small>
+                {% else %}
+                  Update Profile
+                {% endif %}  
+              
+              </div>
+
+              {% if not success %}
+
+              <form method="POST"  enctype="multipart/form-data" >
+                {% csrf_token %}
+
+                <div class="row">
+                  <div class="col">
+                    <div class="form-group">
+                      <div class="input-group input-group-alternative mb-3">
+                        <div class="input-group-prepend">
+                          <span class="input-group-text"><i class="ni ni-single-02"></i>
+                          </span>
+                        </div>
+                        {{ form.first_name }}
+                      </div>
+                    </div>
+                    <span class="text-error">{{ form.first_name.errors }}</span>
+
+                  </div>
+                  <div class="col">
+                    <div class="form-group">
+                      <div class="input-group input-group-alternative mb-3">
+                        <div class="input-group-prepend">
+                          <span class="input-group-text"><i class="ni ni-single-02"></i>
+                          </span>
+                        </div>
+                        {{ form.last_name }}
+                      </div>
+                    </div>
+                    <span class="text-error">{{ form.last_name.errors }}</span>
+                    
+                  </div>
+
+
+                </div>
+
+                <div class="row">
+                  <div class="col">
+                    <div class="form-group">
+                      <div class="input-group input-group-alternative mb-3">
+                        <div class="input-group-prepend">
+                          <span class="input-group-text"><i class="ni ni-square-pin"></i>
+
+                          </span>
+                        </div>
+                        {{ form.address }}
+                      </div>
+                    </div>
+                    <span class="text-error">{{ form.address.errors }}</span>
+
+                  </div>
+                  <div class="col">
+                    <div class="form-group">
+                      <div class="input-group input-group-alternative mb-3">
+                        <div class="input-group-prepend">
+                          <span class="input-group-text"><i class="ni ni-mobile-button"></i>
+                          </span>
+                        </div>
+                        {{ form.phone_number }}
+                      </div>
+                    </div>
+                    <span class="text-error">{{ form.phone_number.errors }}</span>
+                    
+                  </div>
+
+
+                </div>
+              
+                
+                <div class="form-group">
+                  <div class="input-group input-group-alternative mb-3">
+                    <div class="input-group-prepend">
+                      <span class="input-group-text"><i class="ni ni-email-83"></i></span>
+                    </div>
+                    {{ form.email }}
+                  </div>
+                </div>
+                <span class="text-error">{{ form.email.errors }}</span>
+              
+                <div class="form-group">
+                  <div class="input-group input-group-alternative">
+                   
+                    {{ form.profile_photo }}
+                  </div>
+                </div>
+                <span class="text-error">{{ form.profile_photo.errors }}</span>
+             
+                  <div class="col-12">
+                    <div class="custom-control custom-control-alternative custom-checkbox">
+                      {% comment %} <input class="custom-control-input" id="customCheckRegister" type="checkbox">
+                      <label class="custom-control-label" for="customCheckRegister"> {% endcomment %}
+                        {% comment %} <span class="text-muted">I agree with the <a href="#!">Privacy Policy</a></span> {% endcomment %}
+                      </label>
+                    </div>
+                  </div>
+                </div>
+                <div class="text-center">
+                  
+                  <button type="submit" class="btn btn-danger singinbtn mb-3">
+                    Update Profile
+                  </button>
+                </div>
+
+                <!-- Modal -->
+
+              </form>
+              
+
+              {% endif %}  
+
+              <!-- Button trigger modal -->
+
+
+
+  
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      
+
+    </div>
+  </div>
+
+{% endblock content %}
+
+<!-- Specific JS goes HERE --> 
+{% block javascripts %}
+
+{% endblock javascripts %}

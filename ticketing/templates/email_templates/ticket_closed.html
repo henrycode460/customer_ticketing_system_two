@@ -1,0 +1,92 @@
+
+
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Ticket Completed</title>
+    <style>
+        
+        body {
+            margin: 0;
+            font-family: Open Sans, sans-serif;
+            font-size: 1rem;
+            font-weight: 400;
+            line-height: 1.5;
+           
+        }
+        .letterhead {
+            background-color: #ffffff;
+            color: #333;
+            padding: 20px;
+            float: right;
+        }
+
+        .footers{
+            background-color: #D42038;
+            color: #fff;
+            padding: 20px;
+        }
+
+        .company-logo {
+            max-width: 60px;
+            height: auto;
+        }
+
+        /* Add any other custom styles for the email content */
+        .ticket-details {
+            margin-top: 20px;
+            padding: 10px;
+     
+        }
+
+        .footer_img{
+            max-width: 100px;
+            height: auto;
+        }
+        li{
+            list-style: none;
+        }
+
+        .float-right{
+            float: right;
+        }
+    </style>
+</head>
+<body>
+    <div class="letterhead float-right">
+       
+        <img class="float-right" src="https://teleceliberia.com/wp-content/uploads/2023/05/teleceliberialogo.png" alt="company Logo">
+
+        
+    </div>
+
+    <div class="ticket-details">
+        <p>Hello {{ ticket.created_by }},</p>
+        <p>Ticket # {{ticket.ticket_number}} that was assigned to {{ticket.assignee.full_name}} has been completed. Here are the ticket details:</p>
+        <ul>
+            <li>Title: {{ ticket.title }}</li>
+            <li>Customer: {{ ticket.customer }}</li>
+            <li>Description: {{ ticket.description|safe }}</li>
+            <li>Completed on: {{ ticket.close_date }}</li>
+
+            
+            <!-- Add other ticket details here -->
+        </ul>
+        <p>Kindly check with the customer for more confirmation</p>
+        <p>Thank you.</p>
+        <p class="text-muted">Telecel Technical Support</P>
+    </div>
+
+    <div class="footers mt-3">
+        
+        
+        <img src="https://teleceliberia.com/wp-content/uploads/2023/06/Telecel-Liberia-Logo-Open-File-white-1.png" alt="company Logo" class="footer_img">
+       
+
+        <div class="h3">Bridging the Gap to a <br> Connected World with <br> Innovative Solutions Beyound <br> Just Internet Service</div>
+    </div>
+
+    
+</body>
+</html>

@@ -1,0 +1,681 @@
+{% extends 'layouts/base.html' %}
+
+{% block title %} Dashboard {% endblock title %}
+
+<!-- Specific CSS goes HERE -->
+{% block stylesheets %}{% endblock stylesheets %}
+
+{% block content %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.2.1/dist/chart.umd.min.js"></script>
+
+<style>
+/* CSS Styles */
+.custom-modal-content {
+  max-height: 600px; /* Set the maximum height for the modal */
+  overflow-y: auto; /* Enable vertical scrolling */
+  padding: 20px;
+}
+
+.bg-dark {
+  background-color: #C80D0D !important;
+}
+
+.bg-danger {
+  background-color: #C80D0D !important;
+}
+canvas#myChartWeek {
+  margin-top: -350px;
+}
+
+</style>
+
+    <!-- Header -->
+    <div class="header bg-dark pb-6">
+      <div class="container-fluid">
+        <div class="header-body">
+          <div class="row align-items-center py-4">
+            <div class="col-lg-6 col-7">
+              {% comment %} <h6 class="h2 text-white d-inline-block mb-0">Default</h6>
+              <nav aria-label="breadcrumb" class="d-none d-md-inline-block ml-md-4">
+                <ol class="breadcrumb breadcrumb-links breadcrumb-dark">
+                  <li class="breadcrumb-item"><a href="#"><i class="fas fa-home"></i></a></li>
+                  <li class="breadcrumb-item"><a href="#">Dashboards</a></li>
+                  <li class="breadcrumb-item active" aria-current="page">Default</li>
+                </ol>
+              </nav> {% endcomment %}
+            </div>
+            <div class="col-lg-6 col-5 text-right">
+              {% comment %} <a href="#" class="btn btn-sm btn-neutral">New</a>
+              <a href="#" class="btn btn-sm btn-neutral">Filters</a> {% endcomment %}
+            </div>
+          </div>
+          
+            <div class="form-group">
+                {% for message in messages %}
+                <div class="alert alert-danger" role="alert">
+                {{message}}
+                </div>
+                {% endfor %}
+                </div>
+          <!-- Card stats -->
+          <div class="row">
+            <div class="col-xl-3 col-md-6">
+              <div class="card card-stats">
+                <!-- Card body -->
+                <div class="card-body">
+                  <div class="row">
+                    {% if request.user.is_technician%}
+                    <a onclick="showModal('modal5')" href="#" data-toggle="modal" data-target=".bd-example-modal-lg">
+                      {% elif request.user.is_customer_care %}
+                     
+                      <a onclick="showModal('modal1')" href="#" data-toggle="modal" data-target=".bd-example-modal-lg">
+                        {% else %}
+                        <a onclick="showModal('modal9')" href="#" data-toggle="modal" data-target=".bd-example-modal-lg">
+                        {% endif %}
+                    <div class="col">
+                      <h5 class="card-title text-uppercase text-muted mb-0">Total Pending</h5>
+                      {% if request.user.is_technician%}
+                      <span class="h2 font-weight-bold mb-0">{{ticketPendingtech.count}}</span>
+                      {% elif request.user.is_customer_care %} 
+                      <span class="h2 font-weight-bold mb-0">{{ticketpendingCS.count}}</span>
+                      {% else %}
+                      <span class="h2 font-weight-bold mb-0">{{ticketAdminstration.count}}</span>
+                      {% endif %}
+                    </div>
+                  
+                  </a>
+                    <div class="col-auto">
+                      <div class="icon icon-shape bg-gradient-red text-white rounded-circle shadow">
+                        <i class="fas fa-hourglass"></i>
+                      </div>
+                    </div>
+                  </div>
+                  <p class="mt-3 mb-0 text-sm">
+                    {% if request.user.is_technician %}
+                    
+                    <span class="text-success mr-2"><i class="fa fa-arrow-up"></i> {{ percentageTech|floatformat:2 }} %</span>
+                    {% elif request.user.is_customer_care %}
+                    <span class="text-success mr-2"><i class="fa fa-arrow-up"></i> {{ percentage|floatformat:2 }} %</span>
+                    {% else %}
+                    <span class="text-success mr-2"><i class="fa fa-arrow-up"></i> {{ percentageAdmin|floatformat:2 }} %</span>
+                    
+                    {% endif %}
+                    <span class="text-nowrap">Last 30 days</span>
+                  </p>
+                
+                </div>
+            
+              </div>
+            </div>
+            <div class="col-xl-3 col-md-6">
+              <div class="card card-stats">
+                <!-- Card body -->
+                <div class="card-body">
+                  <div class="row">
+                    {% if request.user.is_technician%}
+                    <a onclick="showModal('modal6')" href="#" data-toggle="modal" data-target=".bd-example-modal-lg">
+                      {% elif request.user.is_customer_care %}
+                    <a onclick="showModal('modal2')" href="#" data-toggle="modal" data-target=".bd-example-modal-lg">
+                      {% else %}
+                      <a onclick="showModal('modal19')" href="#" data-toggle="modal" data-target=".bd-example-modal-lg">
+                      {% endif %}
+                    <div class="col">
+                      <h5 class="card-title text-uppercase text-muted mb-0">Total In Progress</h5>
+                      {% if request.user.is_technician%}
+                      <span class="h2 font-weight-bold mb-0">{{ticketInprogresstech.count}}</span>
+                      {% elif request.user.is_customer_care %}
+                      <span class="h2 font-weight-bold mb-0">{{ticketInprogress.count}}</span>
+                      {% else %}
+                      <span class="h2 font-weight-bold mb-0">{{ticketInprogressAdmin.count}}</span>
+                      {% endif %}
+                    </div>
+                  </a>
+                    <div class="col-auto">
+                      <div class="icon icon-shape bg-gradient-orange text-white rounded-circle shadow">
+                        <i class="fas fa-spinner"></i>
+
+                      </div>
+                    </div>
+                  </div>
+                  <p class="mt-3 mb-0 text-sm">
+                    {% if request.user.is_technician %}
+                    
+                    <span class="text-success mr-2"><i class="fa fa-arrow-up"></i> {{ percentageProgressTech|floatformat:2 }} %</span>
+                    {% elif request.user.is_customer_care  %}
+                    <span class="text-success mr-2"><i class="fa fa-arrow-up"></i> {{ percentageProgress|floatformat:2 }} %</span>
+                    {% else %}
+                    <span class="text-success mr-2"><i class="fa fa-arrow-up"></i> {{ percentageProgressAdmin|floatformat:2 }} %</span>
+                    
+                    {% endif %}
+                    <span class="text-nowrap">Last 30 days</span>
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div class="col-xl-3 col-md-6">
+              <div class="card card-stats">
+                <!-- Card body -->
+                <div class="card-body">
+                  <div class="row">
+                    {% if request.user.is_technician %}
+                    
+                    <a onclick="showModal('modal7')" href="#" data-toggle="modal" data-target=".bd-example-modal-lg">
+                      {% elif request.user.is_customer_care%}
+                      <a onclick="showModal('modal3')" href="#" data-toggle="modal" data-target=".bd-example-modal-lg">
+                        {% else %}
+                      <a onclick="showModal('modal11')" href="#" data-toggle="modal" data-target=".bd-example-modal-lg">
+                      {% endif %}
+                    <div class="col">
+                      <h5 class="card-title text-uppercase text-muted mb-0 h6">Total Cust. Approver</h5>
+                      {% if request.user.is_technician%}
+                      <span class="h2 font-weight-bold mb-0">{{ticketAwaitingCusotmerAppTech.count}}</span>
+                      {% elif request.user.is_customer_care %}
+                      <span class="h2 font-weight-bold mb-0">{{ticketAwaitingCusotmerApp.count}}</span>
+                      {% else %}
+                      <span class="h2 font-weight-bold mb-0">{{ticketCustApprovers.count}}</span>
+                      {% endif %}
+                    </div>
+                  </a>
+                    <div class="col-auto">
+                      <div class="icon icon-shape bg-gradient-green text-white rounded-circle shadow">
+                        <i class="fas fa-user"></i>
+
+                      </div>
+                    </div>
+                  </div>
+                  <p class="mt-3 mb-0 text-sm">
+                   
+                    {% if request.user.is_technician %}
+                    <span class="text-success mr-2"><i class="fa fa-arrow-up"></i> {{  percentageCustApproTech|floatformat:2 }} %</span>
+                    {% elif request.user.is_customer_care %}
+                    <span class="text-success mr-2"><i class="fa fa-arrow-up"></i> {{ percentageCustAppro|floatformat:2 }} %</span>
+                    {% else %}
+                    
+                    <span class="text-success mr-2"><i class="fa fa-arrow-up"></i> {{ percentageCustApproAdmin|floatformat:2 }} %</span>
+                    {% endif %}
+
+                    <span class="text-nowrap">Last 30 days</span>
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div class="col-xl-3 col-md-6">
+              <div class="card card-stats">
+                <!-- Card body -->
+                <div class="card-body">
+                  <div class="row">
+                    {% if request.user.is_technician %}
+                    <a onclick="showModal('modal8')" href="#" data-toggle="modal" data-target=".bd-example-modal-lg">
+                      {% elif request.user.is_customer_care %}
+                      <a onclick="showModal('modal4')" href="#" data-toggle="modal" data-target=".bd-example-modal-lg">
+                    {% else %}
+                    <a onclick="showModal('modal12')" href="#" data-toggle="modal" data-target=".bd-example-modal-lg">
+                      {% endif %}
+                    <div class="col">
+                      <h5 class="card-title text-uppercase text-muted mb-0">Total Unassigned</h5>
+                      {% if request.user.is_technician %}
+
+                      <span class="h2 font-weight-bold mb-0">{{ticketUnassigned.count}}</span>
+                      {% elif request.user.is_customer_care %}
+                      <span class="h2 font-weight-bold mb-0">{{ticketunassigned.count}}</span>
+                      {% else %}
+                      
+                      <span class="h2 font-weight-bold mb-0">{{ticketUnassigned.count}}</span>
+                      {% endif %}
+                    </div>
+                  </a>
+                    <div class="col-auto">
+                      <div class="icon icon-shape bg-gradient-info text-white rounded-circle shadow">
+                        <i class="fas fa-ban"></i>
+
+                      </div>
+                    </div>
+                  </div>
+                  <p class="mt-3 mb-0 text-sm">
+                    {% if request.user.is_technician %}
+                    <span class="text-success mr-2"><i class="fa fa-arrow-up"></i> {{ percentageUnassignedAll|floatformat:2 }}%</span>
+                    {% elif request.user.is_customer_care %}
+                    <span class="text-success mr-2"><i class="fa fa-arrow-up"></i> {{ percentageUnassigned|floatformat:2 }}%</span>
+                    {% else %}
+                    <span class="text-success mr-2"><i class="fa fa-arrow-up"></i> {{ percentageUnassignedAll|floatformat:2 }}%</span>
+                    {% endif %}
+                    <span class="text-nowrap">Last 30 days</span>
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div>
+
+    {% include 'home/modals.html' %}
+    
+    </div>
+
+
+
+
+
+
+    <!-- Page content -->
+    <div class="container-fluid mt--6">
+      <div class="row">
+        <div class="col-xl-8">
+          <div class="card bg-default">
+            <div class="card-header bg-transparent">
+              <div class="row align-items-center">
+                <div class="col">
+                  <h6 class="text-light text-uppercase ls-1 mb-1" id="overviewCaption">Overview</h6>
+                  <h5 class="h3 text-white mb-0" id="chartCaption">Ticket Curve</h5>
+                </div>
+                <div class="col">
+                  <ul class="nav nav-pills justify-content-end">
+                    <li class="nav-item mr-2 mr-md-0" data-toggle="chart" data-target="#myChart1"  data-prefix="" data-suffix="k">
+                      <a href="#" class="nav-link py-2 px-3 active" data-toggle="tab" id="ticketChartButton" >
+                       <span class="d-none d-md-block">Ticket</span>
+                          <span class="d-md-none">T</span>
+                      </a>
+                  </li>
+                  
+                  
+                  
+                    
+                  {% if request.user.is_admin %}
+                  <li class="nav-item" data-toggle="chart" data-target="#myChartWeekContainer" data-prefix="$" data-suffix="k">
+                    <a href="#" class="nav-link py-2 px-3" data-toggle="tab" id="weekChartButton">
+                      <span class="d-none d-md-block">Technician</span>
+                      <span class="d-md-none">T</span> 
+                     
+                      {% endif %}
+                    </a>
+                  </li>
+                  
+                  </ul>
+                </div>
+              </div>
+            </div>
+            <div class="card-body">
+              <!-- Chart -->
+              <div class="chart">
+                <!-- Chart wrapper -->
+               <!-- Existing code for the "Month" chart -->
+                <!-- Existing code for the "Month" chart -->
+<div class="chart">
+  <canvas id="myChart1" class="chart-canvas"></canvas>
+</div>
+
+<!-- New chart container for the "Week" chart (initially hidden) -->
+<div class="chart" id="myChartWeekContainer" style="display: none;">
+  <canvas id="myChartWeek" class="chart-canvas"></canvas>
+</div>
+
+
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-xl-4">
+          <div class="card">
+            <div class="card-header bg-transparent">
+              <div class="row align-items-center">
+                <div class="col">
+                  <h6 class="text-uppercase text-muted ls-1 mb-1">System Performance</h6>
+                  <h5 class="h5 mb-0">Top Five Customers That requested Support</h5>
+                </div>
+              </div>
+            </div>
+            <div class="card-body">
+              <!-- Chart -->
+              <!-- Existing code for the "Month" chart -->
+          <div class="chart">
+        <canvas id="myChart2" class="chart-canvas"></canvas>
+      </div>
+
+
+
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-xl-8">
+          <div class="card">
+            <div class="card-header border-0">
+              <div class="row align-items-center">
+                <div class="col">
+                  <h3 class="mb-0">Last Five Ticket Pending</h3>
+                </div>
+                <div class="col text-right">
+                  {% if request.user.is_admin%}
+                  <a href="{% url 'ticket_report' %}" class="btn btn-sm btn-danger">See all</a>
+                
+
+                  {% endif %}
+                </div>
+              </div>
+            </div>
+            <div class="table-responsive">
+              <!-- Projects table -->
+              <table class="table align-items-center table-flush">
+                <thead class="thead-light">
+                  <tr>
+                    <th scope="col">TICKET Number</th>
+                    <th scope="col">Customer</th>
+                    <th scope="col">Title</th>
+                    <th scope="col">Assigned To</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for ticket in ticketAdmin%}
+                  <tr>
+                    <th scope="row">
+                    {{ticket.ticket_number}}
+                    </th>
+                    <td>
+                      {{ticket.customer}}
+                    </td>
+                    <td>
+                      {{ticket.title}}
+                    </td>
+                    <td>
+                      {{ticket.assignee}}
+                    </td>
+                  </tr>
+                 
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+        <div class="col-xl-4">
+          <div class="card">
+            <div class="card-header border-0">
+              <div class="row align-items-center">
+                <div class="col">
+                  <h3 class="mb-0">Last Five Tickets Completed</h3>
+                </div>
+                <div class="col text-right">
+                  {% if request.user.is_admin%}
+                  <a href="{% url 'ticket_completed' %}" class="btn btn-sm btn-danger">See all</a>
+                
+
+                  {% endif %}
+                </div>
+              </div>
+            </div>
+            <div class="table-responsive">
+              <!-- Projects table -->
+              <table class="table align-items-center table-flush">
+                <thead class="thead-light">
+                  <tr>
+                    <th scope="col">Ticket Number</th>
+                    <th scope="col">Customer</th>
+                    <th scope="col">Technician</th>
+                    <th scope="col"></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for tickets in ticketFiveCompleted%}
+                  <tr>
+                    <th scope="row">
+                      {{tickets.ticket_number}}
+                    </th>
+                    <td>
+                      {{tickets.customer}}
+                    </td>
+                    <td>
+                      <div class="d-flex align-items-center">
+                        <span class="mr-2">{{tickets.assignee}}</span>
+                        <div>
+                        
+                        </div>
+                      </div>
+                    </td>
+                  </tr>
+                  {% endfor%}
+                  
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <script>
+        function showModal(modalId) {
+          var modals = document.getElementsByClassName('modal-section');
+          for (var i = 0; i < modals.length; i++) {
+            modals[i].style.display = 'none';
+          }
+          document.getElementById(modalId).style.display = 'block';
+          var myModal = document.getElementById('myModal');
+          var modal = new bootstrap.Modal(myModal);
+          modal.show();
+        }
+      </script>
+
+    
+      
+      <script type="text/javascript">
+        var ctx = document.getElementById('myChart1').getContext('2d');
+        var statusList = [{% for status in status_list_Admin %} '{{ status }}', {% endfor %}];
+        var statusNumbers = [{% for number in status_number_Admin %} '{{ number }}', {% endfor %}];
+      
+        var myChart1 = new Chart(ctx, {
+          type: 'bar',
+          data: {
+            labels: statusList,
+            datasets: [{
+              label: 'Ticket Status Bar Chart',
+              data: statusNumbers,
+              backgroundColor: [
+                "yellow", "#F0F8FF", "#FFCFDF", "#F9C1B1", "#8FBC8F", "#F0FFF0"
+              ],
+              borderColor: [
+                "yellow", "#F0F8FF", "#FFCFDF", "#F9C1B1", "#8FBC8F", "#F0FFF0"
+              ],
+              borderWidth: 0.5
+            }]
+          },
+          options: {
+            scales: {
+              y: {
+                beginAtZero: true,
+                ticks: {
+                  fontColor: "white",
+                  fontSize: 18,
+                },
+                scaleLabel: {
+                  display: true,
+                  labelString: 'Number of Tickets',
+                  fontColor: "white",
+                  fontSize: 18,
+                }
+              },
+              x: {
+                ticks: {
+                  fontColor: "white",
+                  fontSize: 18,
+                },
+                scaleLabel: {
+                  display: true,
+                  labelString: 'Ticket Status',
+                  fontColor: "white",
+                  fontSize: 18,
+                }
+              }
+            },
+            plugins: {
+              legend: {
+                display: true, // Show the legend
+                labels: {
+                  fontColor: "white",
+                  fontSize: 18,
+                }
+              }
+            },
+            layout: {
+              padding: {
+                left: 20,
+                right: 20,
+                top: 0,
+                bottom: 20
+              }
+            },
+            responsive: true,
+            maintainAspectRatio: false,
+          }
+        });
+      </script>
+      
+      
+      
+      
+      
+      
+        
+        
+        <script type="text/javascript">
+          document.addEventListener("DOMContentLoaded", function(event) {
+              var ctx = document.getElementById('myChart2').getContext('2d');
+              var myChart = new Chart(ctx, {
+                  type: 'pie',
+                  data: {
+                      labels: {{ labels|safe }},
+                      datasets: [{
+                          data: {{ data|safe }},
+                          backgroundColor: {{ colors|safe }},
+                      }]
+                  },
+                  options: {
+                      legend: {
+                          display: true,
+                          labels: {
+                              fontColor: 'white',
+                              fontSize: 18
+                          }
+                      }
+                  }
+              });
+          });
+      </script>
+
+      
+      
+      
+   
+     
+      {% include "includes/footer.html" %}
+
+    </div>
+
+{% endblock content %}
+
+<!-- Specific JS goes HERE --> 
+{% block javascripts %}
+
+
+<script>
+  $(document).ready(function() {
+    // Add click event handler for the "Week" button
+    $('[data-target="#myChartWeekContainer"]').on('click', function(e) {
+      e.preventDefault();
+      // Show the "Week" chart and hide the "Month" chart
+      $('#myChartWeekContainer').show();
+      $('#myChart1').hide();
+    });
+
+    // Add click event handler for the "Month" button
+    $('[data-target="#myChart1"]').on('click', function(e) {
+      e.preventDefault();
+      // Show the "Month" chart and hide the "Week" chart
+      $('#myChart1').show();
+      $('#myChartWeekContainer').hide();
+    });
+  });
+</script>
+
+
+
+<script>
+  // Get the data from the template context (parsed JSON)
+  var assigneesData = JSON.parse('{{ assignees_list_json|safe }}');
+
+  // Get the canvas element
+  var ctx = document.getElementById('myChartWeek').getContext('2d');
+
+  // Extract the assignees and number of completed tickets from the data
+  var assignees = assigneesData.map(item => item.assignee__username);
+  var numCompletedTickets = assigneesData.map(item => item.num_completed);
+
+  // Define a custom color scheme for the bars
+  var barColors = [
+    'rgba(75, 192, 192, 0.8)',
+    'rgba(54, 162, 235, 0.8)',
+    'rgba(255, 99, 132, 0.8)',
+    'rgba(255, 205, 86, 0.8)',
+    'rgba(153, 102, 255, 0.8)',
+  ];
+
+  // Create the bar chart using chart.js
+  new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: assignees,
+      datasets: [{
+        label: 'Number of Completed Tickets',
+        data: numCompletedTickets,
+        backgroundColor: barColors, // Use the custom color scheme
+        borderColor: 'rgba(75, 192, 192, 1)',
+        borderWidth: 1
+      }]
+    },
+    options: {
+      scales: {
+        y: {
+          beginAtZero: true,
+          ticks: {
+            stepSize: 1, // Display whole numbers only
+            precision: 0, // Prevent decimals on the y-axis labels
+          },
+          title: {
+            display: true,
+            text: 'Number of Tickets Completed', // Y-axis label
+            font: {
+              size: 16,
+              weight: 'bold',
+            },
+            padding: {
+              top: 10,
+            }
+          }
+        },
+        x: {
+          title: {
+            display: true,
+            text: 'Technician', // X-axis label
+            font: {
+              size: 16,
+              weight: 'bold',
+            },
+            padding: {
+              top: 10,
+            }
+          }
+        }
+      },
+      plugins: {
+        legend: {
+          display: false, // Hide the legend for better appearance
+        }
+      }
+    }
+  });
+</script>
+
+
+
+{% endblock javascripts %}
