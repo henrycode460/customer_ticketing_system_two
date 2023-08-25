@@ -1,0 +1,211 @@
+{% extends 'layouts/base.html' %}
+
+{% block title %} Icons {% endblock title %}
+
+<!-- Specific CSS goes HERE -->
+{% block stylesheets %}{% endblock stylesheets %}
+
+{% block content %}
+
+<style>
+
+  .singinbtn{
+    background-color: #C80D0D;
+  }
+
+  .labelAdd{
+    color: #C80D0D;
+  }
+  .django-ckeditor-widget{
+    width: 100% ;
+  }
+
+  .table-container{
+    margin: 0 auto;
+  }
+
+
+
+.bg-gradient-primary {
+  background: #C80D0D  !important;
+}
+  
+.btn-primary {
+  background-color: #C80D0D !important;
+}
+  
+</style>
+
+{% load static %}
+<link href="https://cdn.datatables.net/1.11.5/css/dataTables.bootstrap4.min.css" rel="stylesheet">
+<link href="https://cdn.datatables.net/buttons/2.1.1/css/buttons.dataTables.min.css" rel="stylesheet">
+
+
+
+
+
+    <!-- Header -->
+    <div class="header bg-gradient-primary pb-2 pt-1 pt-md-8">
+     
+    </div>
+
+   
+
+    
+
+    <div class="container-fluid mt--7">
+        <div class="form-group">
+            {% for message in messages %}
+            <div class="alert alert-danger" role="alert">
+            {{message}}
+            </div>
+            {% endfor %}
+            </div>
+
+        <div class="row">
+          <div class="col">
+            <div class="card shadow">
+              <div class="card-header bg-transparent">
+                <h3 class="mb-0 labelAdd">Users Activities</h3>
+              </div>
+              <div class="card-body">
+                <div class=" container row icon-examples table-container">
+                    <div style="width:100%">
+                     <!-- user_activities.html -->
+                        <!-- user_activities.html -->
+<form method="GET" action="{% url 'user_activities' %}">
+    <label for="user">Select a user:</label>
+    <select id="user" name="user" class="form-control">
+      <option value="">All Users</option>
+      {% for user in users %}
+        <option value="{{ user.id }}">{{ user.username }}</option>
+      {% endfor %}
+    </select>
+    <button class="btn btn-primary mt-3" type="submit">Filter</button>
+  </form>
+  
+  {% if activities %}
+    <h2>User Activities</h2>
+    <table class="table align-items-center table-flush table-responsive" id="ticket-table">
+        <thead class="thead-light">
+          <tr>
+            <th scope="col" class="sort" data-sort="name">Timestamp</th>
+            <th scope="col" class="sort" data-sort="budget">Activities</th>
+            <th scope="col" class="sort" data-sort="status">Details</th>
+            <th scope="col" class="sort" data-sort="status">User Agent</th>
+            <th scope="col" class="sort" data-sort="status">Device Info</th>
+            <th scope="col" class="sort" data-sort="status">IP Address </th>
+            <th scope="col" class="sort" data-sort="status">city</th>
+            <th scope="col" class="sort" data-sort="status">country</th>
+            <th scope="col" class="sort" data-sort="status">Latitude</th>
+            <th scope="col" class="sort" data-sort="status">Longtitude</th>
+            <th scope="col" class="sort" data-sort="status">Region</th>
+          </tr>
+        </thead>
+        <tbody class="list">
+          {% for activity in activities  %}
+            <tr>
+              <td>
+                <div class="media align-items-center">
+                  <div class="media-body">
+                    <span class="name mb-0 text-sm">{{ activity.timestamp }}</span>
+                  </div>
+                </div>
+              </td>
+              <td class="budget">
+                {{ activity.activity }}
+              </td>
+              <td>
+                {{ activity.details }}
+              </td>
+              <td>
+                {{ activity.user_agent_string }}
+              </td>
+              <td>
+                {{ activity.user_agent }}
+              </td>
+              <td>
+                {{ activity.ip_address }}
+              </td>
+              <td>
+                {{ activity.city }}
+              </td>
+              <td>
+                {{ activity.country }}
+              </td>
+              <td>
+                {{ activity.latitude }}
+              </td>
+              <td>
+                {{ activity.longitude }}
+              </td>
+              <td>
+                {{ activity.region }}
+              </td>
+              
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+  {% else %}
+    <p>No activities found.</p>
+  {% endif %}
+  
+  
+                    
+                
+                    </div>
+                      
+                  
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        
+       
+          
+     
+   
+   
+
+      {% include "includes/footer.html" %}
+
+    </div>
+
+{% endblock content %}
+
+<!-- Specific JS goes HERE --> 
+{% block javascripts %}
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.11.5/js/dataTables.bootstrap4.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.1.1/js/dataTables.buttons.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.1.1/js/buttons.html5.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.1.1/js/buttons.print.min.js"></script>
+
+<script>
+    $(document).ready(function() {
+        $('#ticket-table').DataTable({
+            language: {
+                paginate: {
+                    previous: '<i class="fas fa-chevron-left"></i>',
+                    next: '<i class="fas fa-chevron-right"></i>',
+                }
+            }
+        });
+    });
+</script>
+  
+
+
+ 
+
+<script src="/static/assets/vendor/clipboard/dist/clipboard.min.js"></script>
+
+
+
+{% endblock javascripts %}

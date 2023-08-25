@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>New Ticket Assignment</title>
+    <style>
+        /* ... Your existing CSS styles ... */
+    </style>
+</head>
+<body>
+    <div class="letterhead">
+        <img src="https://teleceliberia.com/wp-content/uploads/2023/05/teleceliberialogo.png" alt="company Logo">
+    </div>
+
+    <div class="ticket-details">
+        <p>Hello {{ ticket.customer }},</p>
+        <p>Kindly Click the button below to confirm that {{ ticket.assignee }} successfully completed the issue you had with your service.</p>
+
+        <!-- "Approve" button with link inside -->
+        <p> Click the link below to confirm that the technican solve your issue successfully</p>
+        {{ completion_url }}
+
+        <!-- "Reject" button with link inside -->
+        <p> Click the link below to if the customer didn't solve your problem accordingly</p>
+        {{ rejection_url }}
+           
+       
+        <p>Thank for your support</p>
+        <p class="text-muted">Telecel Customer Support</p>
+    </div>
+
+    <div class="footers mt-3">
+        <img src="https://teleceliberia.com/wp-content/uploads/2023/06/Telecel-Liberia-Logo-Open-File-white-1.png" alt="company Logo" class="footer_img">
+        <div class="h3">Bridging the Gap to a <br> Connected World with <br> Innovative Solutions Beyond <br> Just Internet Service</div>
+    </div>
+</body>
+</html>

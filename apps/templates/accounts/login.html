@@ -1,0 +1,124 @@
+{% extends 'layouts/base-fullscreen.html' %}
+
+{% block title %} Login {% endblock title %}
+
+<!-- Specific CSS goes HERE -->
+{% block stylesheets %}{% endblock stylesheets %}
+
+{% block content %}
+<style>
+ 
+  .mani-controler{
+    margin-top: -80px
+  }
+
+  .justify-content-center {
+    justify-content: center !important;
+    margin-top: -90px;
+}
+
+.singinbtn{
+  background-color: #C80D0D;
+}
+
+.add-crendnt, .remember-me, .signin-sty {
+  color: #C80D0D;
+}
+
+.login-img {
+  max-height: 275px;
+  max-width: 350px;
+  margin-top: -56px;
+}
+.signin-sty{
+  max-height: 100px;
+}
+
+.alert-danger {
+  color: #fff;
+  border-color: #C80D0D;
+  background-color: #C80D0D;
+}
+
+
+</style>
+<div class="form-group">
+  {% for message in messages %}
+  <div class="alert alert-danger" role="alert">
+  {{message}}
+  </div>
+  {% endfor %}
+  </div>
+    <!-- Page content -->
+    <div class="container mt--8 pb-5 ">
+      <div class="row justify-content-center mani-controler">
+        <div class="col-lg-5 col-md-7">
+          <div class="card bg-secondary shadow border-0">
+            <div class="card-header bg-transparent pb-5 logo-container">
+              <div class=" signin-sty text-center mt-2 mb-3">
+                <img src="/static/assets/img/brand/Telecel Liberia New Logo-01.png" class="img-fluid login-img" alt="company logo">
+              </div>
+            </div>
+            <div class="card-body px-lg-5 py-lg-5 border-0">
+              <div class="text-center  mb-4 border-0">
+
+                {% if msg %}
+                  <p>{{ msg }}</p>
+                {% else %}
+                  <h4 class="add-crendnt">
+                    Add your credentials
+                  </h4>
+                {% endif %}  
+
+              </div>
+
+              <form method="POST">
+
+                {% csrf_token %}
+
+                <div class="form-group mb-3">
+                  <div class="input-group input-group-alternative">
+                    <div class="input-group-prepend">
+                      <span class="input-group-text"><i class="ni ni-hat-3"></i></span>
+                    </div>
+                    {{ form.username }}
+                  </div>
+                </div>
+                <div class="form-group">
+                  <div class="input-group input-group-alternative">
+                    <div class="input-group-prepend">
+                      <span class="input-group-text"><i class="ni ni-lock-circle-open"></i></span>
+                    </div>
+                    {{ form.password }}
+                  </div>
+                </div>
+                <div class="custom-control custom-control-alternative custom-checkbox">
+                  <input class="custom-control-input" id=" customCheckLogin" type="checkbox">
+                  <label class="custom-control-label" for=" customCheckLogin">
+                    <span class="text-muted "><h4 class="remember-me">Remember me</h4></span>
+                  </label>
+                </div>
+                <div class="text-center">
+                  <button type="submit" class="btn btn-danger my-4 singinbtn">Sign in</button>
+                </div>
+              </form>
+            </div>
+          </div>
+          <div class="row mt-3">
+            <div class="col-6">
+              {% comment %} <a href="{% url 'register' %}" class="text-light"><small>Register</small></a> {% endcomment %}
+            </div>
+            <div class="col-6">
+              <a href="{%url 'reset_password' %}" class="text-light"><small>Forget Password</small></a>
+              
+            </div>
+            
+          </div>
+        </div>
+      </div>
+    </div>
+
+{% endblock content %}
+
+<!-- Specific JS goes HERE --> 
+{% block javascripts %}{% endblock javascripts %}

@@ -1,0 +1,86 @@
+
+
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>New Ticket Assignment</title>
+    <style>
+        
+        body {
+            margin: 0;
+            font-family: Open Sans, sans-serif;
+            font-size: 1rem;
+            font-weight: 400;
+            line-height: 1.5;
+           
+        }
+        .letterhead {
+            background-color: #ffffff;
+            color: #333;
+            padding: 20px;
+            float: right;
+        }
+
+        .footers{
+            background-color: #D42038;
+            color: #fff;
+            padding: 20px;
+        }
+
+        .company-logo {
+            max-width: 60px;
+            height: auto;
+        }
+
+        /* Add any other custom styles for the email content */
+        .ticket-details {
+            margin-top: 20px;
+            padding: 10px;
+     
+        }
+
+        .footer_img{
+            max-width: 100px;
+            height: auto;
+        }
+        li{
+            list-style: none;
+        }
+
+        .float-right{
+            float: right;
+        }
+    </style>
+</head>
+<body>
+    <div class="letterhead float-right">
+       
+        <img class="float-right" src="https://teleceliberia.com/wp-content/uploads/2023/05/teleceliberialogo.png" alt="company Logo">
+
+        
+    </div>
+
+    <div class="ticket-details">
+        <p>Hello {{ ticket.customer }},</p>
+        <p>Your Issue with ticket # <span style="font-width:bold; font-size: 15px"> {{ticket.ticket_number}} </span> 
+            is being attended to by our Technician
+             <span style="font-width:bold; font-size: 15px"> {{ticket.assignee.full_name}} </span> the technician contact is <span style="font-width:bold; font-size: 15px"> {{ticket.assignee.phone_number}} </span> </p>
+      
+        <p>We Wil get back to you shortly</p>
+        <p>Thank for your patience</p>
+        <p class="text-muted">Telecel Customer Support</P>
+    </div>
+
+    <div class="footers mt-3">
+        
+        
+        <img src="https://teleceliberia.com/wp-content/uploads/2023/06/Telecel-Liberia-Logo-Open-File-white-1.png" alt="company Logo" class="footer_img">
+       
+
+        <div class="h3">Bridging the Gap to a <br> Connected World with <br> Innovative Solutions Beyound <br> Just Internet Service</div>
+    </div>
+
+    
+</body>
+</html>

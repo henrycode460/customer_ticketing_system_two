@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Reject Ticket</title>
+</head>
+<body>
+    <h2>Reject Ticket</h2>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Reject</button>
+    </form>
+</body>
+</html>
