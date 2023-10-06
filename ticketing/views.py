@@ -166,7 +166,7 @@ def add_ticket(request):
 
     context = {'form': form}
     return render(request, 'add_ticket.html', context)
-# =================================================== ACCEPT TICKET ===============================================================
+# =================================================== ACCEPT TICKETTTTTTTT ===============================================================
 
 
 def accept_ticket(request, pk):
