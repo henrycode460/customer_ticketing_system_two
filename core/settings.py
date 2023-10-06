@@ -83,15 +83,17 @@ WSGI_APPLICATION = 'core.wsgi.application'
 
 DATABASES = {
     'default': {
-        # 'ENGINE': 'django.db.backends.postgresql',
-         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'my_database_instance', 
+        'ENGINE': 'django.db.backends.postgresql',
+        #  'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        # 'NAME': 'my_database_instance', 
+        'NAME': 'customer_ticketing_app',
         'USER': 'postgres',
         'PASSWORD': 'telecel0523',
-        # 'HOST': '127.0.0.1', 
-        'HOST': 'mybdsetup.c0i13qcnfvzy.us-east-1.rds.amazonaws.com',
+         'HOST': 'localhost', 
+        # 'HOST': 'mybdsetup.c0i13qcnfvzy.us-east-1.rds.amazonaws.com',
         
-        'PORT': '5432',
+        # 'PORT': '5432',
+        'PORT': '',
     }
 }
 
